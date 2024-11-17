@@ -1,4 +1,4 @@
-function(SoundCleaner_check_libfuzzer_support var_name)
+function(imguiwrap_check_libfuzzer_support var_name)
   set(LibFuzzerTestSource
       "
 #include <cstdint>

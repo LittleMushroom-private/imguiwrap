@@ -3,7 +3,7 @@
 # https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
 function(
-  SoundCleaner_set_project_warnings
+  imguiwrap_set_project_warnings
   project_name
   WARNINGS_AS_ERRORS
   MSVC_WARNINGS

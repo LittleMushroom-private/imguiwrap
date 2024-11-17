@@ -1,7 +1,7 @@
 include(CheckCXXCompilerFlag)
 
 macro(
-  SoundCleaner_enable_hardening
+  imguiwrap_enable_hardening
   target
   global
   ubsan_minimal_runtime)

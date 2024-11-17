@@ -1,5 +1,5 @@
 # Enable cache if available
-function(SoundCleaner_enable_cache)
+function(imguiwrap_enable_cache)
   set(CACHE_OPTION
       "ccache"
       CACHE STRING "Compiler cache to be used")
