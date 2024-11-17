@@ -30,11 +30,11 @@ project ("imguiwrap" LANGUAGES CXX)
 
 add_library(
 	imguiwrap
-
+	
 	imguiwrap.cpp
-	imguiwrap.h
-	imguiwrap.helpers.h
-	imguiwrap.dear.h
+	imguiwrap.hpp
+	imguiwrap.helpers.hpp
+	imguiwrap.dear.hpp
 )
 
 target_include_directories(

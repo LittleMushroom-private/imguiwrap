@@ -8,7 +8,7 @@
 #    include <string>
 #endif
 
-#include "imguiwrap.helpers.h"
+#include "imguiwrap.helpers.hpp"
 
 namespace dear
 {

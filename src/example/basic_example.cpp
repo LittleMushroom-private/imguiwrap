@@ -4,7 +4,7 @@
 // See "dear_example" for using more modern C++ that doesn't
 // involve macros.
 
-#include "imguiwrap.helpers.h"
+#include "imguiwrap.helpers.hpp"
 
 #include <string_view>
 

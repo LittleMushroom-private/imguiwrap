@@ -184,7 +184,7 @@ Because life is too short to be writing `ImVec2(0, 0)` all over the place...
 
 ## DEFER
 
-If crazy RAII operator&& is too much for you, `imguiwrap.helpers.h` provides a simpler
+If crazy RAII operator&& is too much for you, `imguiwrap.helpers.hpp` provides a simpler
 `DEFER` macro too:
 
 ```cpp

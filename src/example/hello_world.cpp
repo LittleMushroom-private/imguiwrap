@@ -1,6 +1,6 @@
 // Simple demonstration focused on showing the use of imgui_main.
 
-#include "imguiwrap.dear.h"
+#include "imguiwrap.dear.hpp"
 
 ImGuiWrapperReturnType
 my_render_function()
