@@ -29,7 +29,12 @@ endif ()
 set (IMGUI_PLATFORM_BACKEND "glfw" CACHE STRING "Specify which imgui platform backend to use")
 set (IMGUI_RENDERER_BACKEND "opengl3" CACHE STRING "Specify which imgui renderer backend to use")
 
-project ("imguiwrap")
+project (imguiwrap
+    VERSION 0.1.1
+	DESCRIPTION ""
+	HOMEPAGE_URL "https://github.com/LittleMushroom-private/imguiwrap"
+	LANGUAGES CXX C
+)
 
 include(cmake/PreventInSourceBuilds.cmake)
 include(ProjectOptions.cmake)

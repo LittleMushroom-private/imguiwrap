@@ -27,7 +27,9 @@ function(imguiwrap_setup_dependencies)
       NAME imgui
       VERSION 1.91.5
       GITHUB_REPOSITORY "ocornut/imgui"
-      OPTIONS "GLFW_USE_WAYLAND=1"
+      OPTIONS 
+      "GLFW_BUILD_WAYLAND=1"
+      "GLFW_BUILD_X11=1"
       #"CPM_DISABLE_BUILD=ON"
     )
     set(
