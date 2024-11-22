@@ -53,4 +53,8 @@ if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 	set(IMGUIWRAP_STANDALONE TRUE)
 endif()
 
+
+add_library(imguiwrap::imguiwrap_options ALIAS imguiwrap_options)
+add_library(imguiwrap::imguiwrap_warnings ALIAS imguiwrap_warnings)
+
 add_subdirectory(src)

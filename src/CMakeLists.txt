@@ -55,6 +55,9 @@ target_include_directories(
 
 target_link_libraries(
 	imguiwrap
+	PRIVATE
+	imguiwrap::imguiwrap_options
+	imguiwrap::imguiwrap_warnings
 
 	PUBLIC
 
@@ -77,6 +80,6 @@ endif ()
 #target_compile_options(imguiwrap PRIVATE ${IMGW_NO_RTTI} ${IMGW_NO_EXCEPTIONS} ${IMGW_ALL_WARNINGS})
 
 
-if (IMGUIWRAP_STANDALONE)
-	add_subdirectory(example)
-endif ()
+# if (IMGUIWRAP_STANDALONE)
+# 	add_subdirectory(example)
+# endif ()
