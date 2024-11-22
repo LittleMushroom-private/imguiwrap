@@ -16,6 +16,9 @@ set (IMGUIWRAP_CXX_STANDARD "20" CACHE STRING "Specify the C++ standard to use (
 set (CMAKE_CXX_STANDARD "${IMGUIWRAP_CXX_STANDARD}")
 endif()
 
+set(CMAKE_C_FLAGS_INIT "-fsanitize=undefined")
+set(CMAKE_CXX_FLAGS_INIT "-fsanitize=undefined")
+
 # strongly encouraged to enable this globally to avoid conflicts between
 # -Wpedantic being enabled and -std=c++20 and -std=gnu++20 for example
 # when compiling with PCH enabled
