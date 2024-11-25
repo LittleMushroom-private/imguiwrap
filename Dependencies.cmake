@@ -30,7 +30,7 @@ function(imguiwrap_setup_dependencies)
       OPTIONS 
       "GLFW_BUILD_WAYLAND=1"
       "GLFW_BUILD_X11=1"
-      #"CPM_DISABLE_BUILD=ON"
+      "CPM_DISABLE_BUILD=ON"
     )
     set(
       IMGUI_SOURCES
