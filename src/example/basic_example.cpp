@@ -4,10 +4,14 @@
 // See "dear_example" for using more modern C++ that doesn't
 // involve macros.
 
-#include "imguiwrap.helpers.h"
+//#include "imguiwrap.helpers.h"
+#include "imgui.h"
+#include "imguiwrap.h"
+#include "imguiwrap.defermacro.h"
 
-#include <string_view>
+//#include <string_view>
 
+namespace{
 ImGuiWrapperReturnType
 windowFn()
 {
@@ -42,18 +46,12 @@ windowFn()
     // Return nothing.
     return {};
 }
+}
 
 int
 main(int, const char**)
 {
-#if __cplusplus__ >= 202000ULL
-    ImGuiWrapConfig config{.windowTitle_ = "Basic Example", .width_ = 1280, .height_ = 600};
-#else
-    ImGuiWrapConfig config{};
-    config.windowTitle_ = "Basic Example";
-    config.width_       = 1280;
-    config.height_      = 600;
-#endif
 
+    constexpr ImGuiWrapConfig config{.windowTitle_ = "Basic Example", .width_ = 1280, .height_ = 600};
     return imgui_main(config, windowFn);
 }

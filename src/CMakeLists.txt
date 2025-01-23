@@ -44,6 +44,18 @@ add_library(
 	imguiwrap.dear.h
 )
 
+add_library(imguiwrap::imguiwrap ALIAS imguiwrap)
+
+target_link_libraries(
+	imguiwrap
+
+	PUBLIC
+
+	imguiwrap_options
+	imguiwrap_warnings
+	imgui
+)
+
 target_include_directories(
 	imguiwrap
 
@@ -52,21 +64,14 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_include_directories(
-	imguiwrap
+#target_include_directories(
+#	imguiwrap
+#
+#	PRIVATE
+#
+#	${CMAKE_CURRENT_SOURCE_DIR}
+#)
 
-	PRIVATE
-
-	${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-target_link_libraries(
-	imguiwrap
-
-	PUBLIC
-
-	imgui
-)
 
 if (MSVC)
 	string (REGEX REPLACE "/EH[a-z]+-?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

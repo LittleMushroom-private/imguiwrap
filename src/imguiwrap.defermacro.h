@@ -20,6 +20,6 @@ class Deferral
     void (*mFn)();
 
 public:
-    constexpr Deferral(void (*fn)()) noexcept : mFn(fn) {}
+    explicit constexpr Deferral(void (*fn)()) noexcept : mFn(fn) {}
     ~Deferral() noexcept { mFn(); }
 };

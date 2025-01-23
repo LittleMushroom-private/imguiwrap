@@ -33,7 +33,7 @@ struct ImGuiWrapConfig
     ImVec4 clearColor_{0.45F, 0.55F, 0.60F, 1.00F};
 
     // enableVsync_ enables vsync for the window.
-    bool enableVsync_;
+    bool enableVsync_{true};
 
     // keyboardNav_ enables keyboard controls per ImGuiConfigFlags_NavEnableKeyboard;
     bool keyboardNav_{true};

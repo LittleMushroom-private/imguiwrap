@@ -1,7 +1,11 @@
 #include <array>
 #include <functional>
 #include <optional>
+#include <algorithm>
+//#include <ranges>
 #include <utility>
+#include <format>
+#include <iostream>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -17,21 +21,22 @@
 
 #include "imguiwrap.dear.h"
 #include "imguiwrap.h"
-//#include "imguiwrap.helpers.h"
+// #include "imguiwrap.helpers.h"
 
 #include "imgui_internal.h"
 
+namespace {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-namespace{
-    std::optional<std::pair<int, int>> newSize{};
-}
+std::optional<std::pair<int, int>> newSize{};
+}// namespace
 
 // glfw_error_callback is an internal callback for logging any errors raised
 // by glfw.
 namespace {
 void glfw_error_callback(int error, const char *description) noexcept
 {
-  (void)fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+  //(void)fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+  std::cerr << std::format("Glfw Error {}: {}\n", error, description);
 }
 }// namespace
 
@@ -175,8 +180,8 @@ int imgui_main(const ImGuiWrapConfig &config, const ImGuiWrapperFn &mainFn, cons
 }
 
 // flagsWindow is a helper for initializing a flag-editing window.
-namespace{
-    void flagsWindow(const char *title, bool *showing, const std::function<void(void)> &impl) noexcept
+namespace {
+void flagsWindow(const char *title, bool *showing, const std::function<void(void)> &impl) noexcept
 {
   if (showing != nullptr && !*showing) { return; }
 
@@ -185,7 +190,7 @@ namespace{
 
   dear::Begin(title, showing, editWindowFlags) && impl;
 }
-}
+}// namespace
 
 
 namespace dear {
@@ -200,7 +205,7 @@ void SetHostWindowSize(int x, int y) noexcept
 
 // EditTableFlags presents a window with selections for all the flags available
 // for a table, allowing you to dynamically modify the table's appearance/layout.
-void EditTableFlags(const char *title, bool *showing, ImGuiTableFlags *flags) noexcept
+void EditTableFlags(const char *editWindowTitle, bool *showing, ImGuiTableFlags *flags) noexcept
 {
   // List of the sizing flag names.
   struct SizeInfo
@@ -209,26 +214,48 @@ void EditTableFlags(const char *title, bool *showing, ImGuiTableFlags *flags) no
     ImGuiTableFlags flag;
   };
   static constexpr std::array<SizeInfo, 5> sizes{
-    SizeInfo{ .name="Default", .flag=0 },
-    SizeInfo{ .name="FixedFit", .flag=ImGuiTableFlags_SizingFixedFit },
-    SizeInfo{ .name="FixedSame", .flag=ImGuiTableFlags_SizingFixedSame },
-    SizeInfo{ .name="StretchProp", .flag=ImGuiTableFlags_SizingStretchProp },
-    SizeInfo{ .name="StretchSame", .flag=ImGuiTableFlags_SizingStretchSame },
+    SizeInfo{ .name = "Default", .flag = 0 },
+    SizeInfo{ .name = "FixedFit", .flag = ImGuiTableFlags_SizingFixedFit },
+    SizeInfo{ .name = "FixedSame", .flag = ImGuiTableFlags_SizingFixedSame },
+    SizeInfo{ .name = "StretchProp", .flag = ImGuiTableFlags_SizingStretchProp },
+    SizeInfo{ .name = "StretchSame", .flag = ImGuiTableFlags_SizingStretchSame },
   };
 
-  flagsWindow(title, showing, [=]() noexcept {
+  flagsWindow(editWindowTitle, showing, [=]() noexcept {
     // Drop-boxes first.
     // Sizing is actually a discrete integer value, shifted 13 bits into the flag.
+    // const int sizeFlag = *flags & ImGuiTableFlags_SizingMask_;
+    // size_t sizeSelected = 0;
+    // for (size_t i = 1; i < sizes.size(); i++) {
+    //   if (sizes[i].flag == sizeFlag) { sizeSelected = i; }
+    // }
+    // dear::Combo("Sizing", sizes[sizeSelected].name) && [&] {
+    //   for (const auto &size : sizes) {
+    //     if (ImGui::Selectable(size.name)) { *flags = (*flags & ~ImGuiTableFlags_SizingMask_) | size.flag; }
+    //   }
+    // };
+    // const int sizeFlag = *flags & ImGuiTableFlags_SizingMask_;
+    // std::optional<size_t> sizeSelectedOpt = std::ranges::find_if(sizes, [&](const auto &size) {
+    //   return size.flag == sizeFlag;
+    // }).base() - sizes.data();// Get index from iterator
+
+    // if (sizeSelectedOpt) {
+    //   dear::Combo("Sizing", sizes[sizeSelectedOpt.value()].name) && [&] {
+    //     for (const auto &size : sizes) {
+    //       if (ImGui::Selectable(size.name)) { *flags = (*flags & ~ImGuiTableFlags_SizingMask_) | size.flag; }
+    //     }
+    //   };
+    // }
     const int sizeFlag = *flags & ImGuiTableFlags_SizingMask_;
-    size_t sizeSelected = 0;
-    for (size_t i = 1; i < sizes.size(); i++) {
-      if (sizes[i].flag == sizeFlag) { sizeSelected = i; }
+    const auto *const selectedSizeIt = std::ranges::find_if(sizes, [&](const auto &size) { return size.flag == sizeFlag; });
+
+    if (selectedSizeIt != sizes.end()) {
+      dear::Combo("Sizing", selectedSizeIt->name) && [&] {
+        for (const auto &size : sizes) {
+          if (ImGui::Selectable(size.name)) { *flags = (*flags & ~ImGuiTableFlags_SizingMask_) | size.flag; }
+        }
+      };
     }
-    dear::Combo("Sizing", sizes[sizeSelected].name) && [&] {
-      for (const auto &size : sizes) {
-        if (ImGui::Selectable(size.name)) { *flags = (*flags & ~ImGuiTableFlags_SizingMask_) | size.flag; }
-      }
-    };
 
     // Checkboxes.
     ImGui::CheckboxFlags("Resizable", flags, ImGuiTableFlags_Resizable);
@@ -258,9 +285,9 @@ void EditTableFlags(const char *title, bool *showing, ImGuiTableFlags *flags) no
 
 // EditWindowFlags presents a window with selections for all the flags available
 // for a window, allowing you to dynamically modify the window's appearance/layout.
-void EditWindowFlags(const char *title, bool *showing, ImGuiWindowFlags *flags) noexcept
+void EditWindowFlags(const char *editWindowTitle, bool *showing, ImGuiWindowFlags *flags) noexcept
 {
-  flagsWindow(title, showing, [=]() noexcept {
+  flagsWindow(editWindowTitle, showing, [=]() noexcept {
     ImGui::CheckboxFlags("NoTitleBar", flags, ImGuiWindowFlags_NoTitleBar);
     ImGui::CheckboxFlags("NoResize", flags, ImGuiWindowFlags_NoResize);
     ImGui::CheckboxFlags("NoMove", flags, ImGuiWindowFlags_NoMove);

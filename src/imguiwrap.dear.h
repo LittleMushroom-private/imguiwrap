@@ -54,7 +54,7 @@ namespace dear
         // constructor takes a predicate that may be used to determine if
         // additional calls can be made, and a function/lambda/callable to
         // be invoked from the destructor.
-        constexpr ScopeWrapper(bool ok) noexcept : ok_{ok} {}
+        explicit constexpr ScopeWrapper(bool ok) noexcept : ok_{ok} {}
 
         // destructor always invokes the supplied destructor function.
         ~ScopeWrapper() noexcept
@@ -87,7 +87,7 @@ namespace dear
     struct Begin : public ScopeWrapper<Begin, true>
     {
         // Invoke Begin and guarantee that 'End' will be called.
-        Begin(const char* title, bool* open = nullptr, ImGuiWindowFlags flags = 0) noexcept
+        explicit Begin(const char* title, bool* open = nullptr, ImGuiWindowFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::Begin(title, open, flags))
         {}
         static void dtor() noexcept { ImGui::End(); }
@@ -96,11 +96,11 @@ namespace dear
     // Wrapper for ImGui::BeginChild ... EndChild, which will always call EndChild.
     struct Child : public ScopeWrapper<Child, true>
     {
-        Child(const char* title, const ImVec2& size = Zero, ImGuiChildFlags child_flags = 0,
+        explicit Child(const char* title, const ImVec2& size = Zero, ImGuiChildFlags child_flags = 0,
               ImGuiWindowFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginChild(title, size, child_flags, flags))
         {}
-        Child(ImGuiID id, const ImVec2& size = Zero, ImGuiChildFlags child_flags = 0,
+        explicit Child(ImGuiID id, const ImVec2& size = Zero, ImGuiChildFlags child_flags = 0,
               ImGuiWindowFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginChild(id, size, child_flags, flags))
         {}
@@ -138,7 +138,7 @@ namespace dear
     // Wrapper for ImGui::Begin...EndListBox.
     struct ListBox : public ScopeWrapper<ListBox>
     {
-        ListBox(const char* label, const ImVec2& size = Zero) noexcept
+        explicit ListBox(const char* label, const ImVec2& size = Zero) noexcept
             : ScopeWrapper(ImGui::BeginListBox(label, size))
         {}
         static void dtor() noexcept { ImGui::EndListBox(); }
@@ -161,7 +161,7 @@ namespace dear
     // Wrapper for ImGui::BeginMenu...ImGui::EndMenu.
     struct Menu : public ScopeWrapper<Menu>
     {
-        Menu(const char* label, bool enabled = true) noexcept
+        explicit Menu(const char* label, bool enabled = true) noexcept
             : ScopeWrapper(ImGui::BeginMenu(label, enabled))
         {}
         static void dtor() noexcept { ImGui::EndMenu(); }
@@ -181,14 +181,14 @@ namespace dear
     // Wrapper for ImGui::Begin...EndToolTip.
     struct Tooltip : public ScopeWrapper<Tooltip>
     {
-        Tooltip(bool enabled = true) noexcept : ScopeWrapper(enabled && ImGui::BeginTooltip()) {  }
+        explicit Tooltip(bool enabled = true) noexcept : ScopeWrapper(enabled && ImGui::BeginTooltip()) {  }
         static void dtor() noexcept { ImGui::EndTooltip(); }
     };
 
     // Wrapper around ImGui::CollapsingHeader to allow consistent code styling.
     struct CollapsingHeader : public ScopeWrapper<CollapsingHeader>
     {
-        CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags = 0) noexcept
+        explicit CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::CollapsingHeader(label, flags))
         {}
         inline static void dtor() noexcept {}
@@ -250,7 +250,7 @@ namespace dear
     struct Popup : public ScopeWrapper<Popup>
     {
         // Non-modal Popup.
-        Popup(const char* str_id, ImGuiWindowFlags flags = 0) noexcept
+        explicit Popup(const char* str_id, ImGuiWindowFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginPopup(str_id, flags))
         {}
 
@@ -280,7 +280,7 @@ namespace dear
     // Wrapper around ImGui's BeginPopupModal ... EndPopup sequence.
     struct PopupModal : public ScopeWrapper<PopupModal>
     {
-        PopupModal(const char* name, bool* p_open = nullptr, ImGuiWindowFlags flags = 0) noexcept
+        explicit PopupModal(const char* name, bool* p_open = nullptr, ImGuiWindowFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginPopupModal(name, p_open, flags))
         {}
         static void dtor() noexcept { ImGui::EndPopup(); }
@@ -289,7 +289,7 @@ namespace dear
     // Wrapper for ImGui::BeginTabBar ... EndTabBar
     struct TabBar : public ScopeWrapper<TabBar>
     {
-        TabBar(const char* name, ImGuiTabBarFlags flags = 0) noexcept
+        explicit TabBar(const char* name, ImGuiTabBarFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginTabBar(name, flags))
         {}
         static void dtor() noexcept { ImGui::EndTabBar(); }
@@ -298,7 +298,7 @@ namespace dear
     // Wrapper for ImGui::BeginTabItem ... EndTabItem
     struct TabItem : public ScopeWrapper<TabItem>
     {
-        TabItem(const char* name, bool* open = nullptr, ImGuiTabItemFlags flags = 0) noexcept
+        explicit TabItem(const char* name, bool* open = nullptr, ImGuiTabItemFlags flags = 0) noexcept
             : ScopeWrapper(ImGui::BeginTabItem(name, open, flags))
         {}
         static void dtor() noexcept { ImGui::EndTabItem(); }
@@ -312,7 +312,7 @@ namespace dear
         {
             ImGui::PushStyleVar(idx, val);
         }
-        WithStyleVar(ImGuiStyleVar idx, float val = 0.0f) noexcept : ScopeWrapper(true)
+        explicit WithStyleVar(ImGuiStyleVar idx, float val = 0.0f) noexcept : ScopeWrapper(true)
         {
             ImGui::PushStyleVar(idx, val);
         }
@@ -324,7 +324,7 @@ namespace dear
     // Wrapper for BeginTooltip predicated on the previous item being hovered.
     struct ItemTooltip : public ScopeWrapper<ItemTooltip>
     {
-        ItemTooltip(ImGuiHoveredFlags flags = ImGuiHoveredFlags_ForTooltip) noexcept
+        explicit ItemTooltip(ImGuiHoveredFlags flags = ImGuiHoveredFlags_ForTooltip) noexcept
             : ScopeWrapper(ImGui::IsItemHovered(flags))
         {
             if (ok_)
@@ -349,7 +349,7 @@ namespace dear
 	struct Disabled : public ScopeWrapper<Disabled>
 	{
 
-		Disabled(bool disabled) noexcept : ScopeWrapper(true)
+		explicit Disabled(bool disabled) noexcept : ScopeWrapper(true)
 		{
 			ImGui::BeginDisabled(disabled); // Ideally we would only call this if disabled is true, but because dtor is static, we can't keep track of state
 		}

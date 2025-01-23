@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     gdb \
     clang19-dev \
     llvm19-dev \
+    compiler-rt \
     cmake \
     neovim \
     emacs \
@@ -32,7 +33,7 @@ RUN apk add --no-cache \
     libxi-dev \
     glfw-dev
 
-RUN    pipx install conan
+RUN pipx install conan
 # Set environment variables for Conan
 ENV CONAN_SYSREQUIRES_SUDO=0
 ENV CONAN_SYSREQUIRES_MODE=enabled
