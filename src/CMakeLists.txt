@@ -11,6 +11,7 @@ if (USE_CLANG_TIDY)
 				"clang-tidy-12" 
 				"clang-tidy-13" 
 				"clang-tidy-14"
+				"clang-tidy-19"
 	)
 	if (NOT CLANG_TIDY)
 		MESSAGE(WARNING "USE_CLANG_TIDY is ON but no clang-tidy executable found.")
@@ -26,7 +27,13 @@ if (USE_CLANG_TIDY)
 	endif ()
 endif ()
 
-project ("imguiwrap" LANGUAGES CXX)
+project(imguiwrap
+	VERSION 0.1.0
+	DESCRIPTION ""
+	HOMEPAGE_URL "https://github.com/LittleMushroom-private/imguiwrap.git"
+	LANGUAGES CXX C
+)
+
 
 add_library(
 	imguiwrap

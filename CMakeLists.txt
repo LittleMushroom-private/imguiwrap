@@ -8,22 +8,28 @@
 # Pull-requests that introduce support for selecting one or more alternate backend
 # are welcome.
 #
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 
-set (IMGUIWRAP_CXX_STANDARD "17" CACHE STRING "Specify the C++ standard to use (must be 17 or higher")
+set(IMGUIWRAP_CXX_STANDARD "23" CACHE STRING "Specify the C++ standard to use (must be 17 or higher")
 
-set (CMAKE_CXX_STANDARD "${IMGUIWRAP_CXX_STANDARD}")
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD "${IMGUIWRAP_CXX_STANDARD}")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (IMGUIWRAP_BACKEND "GL3W" CACHE STRING "Specify the imgui backend")
-if (IMGUIWRAP_BACKEND STREQUAL "GL3W")
+set(IMGUIWRAP_BACKEND "GL3W" CACHE STRING "Specify the imgui backend")
+
+if(IMGUIWRAP_BACKEND STREQUAL "GL3W")
 	add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GL3W)
-endif ()
+endif()
 
-project ("imguiwrap")
+project(imguiwrap
+	VERSION 0.1.0
+	DESCRIPTION ""
+	HOMEPAGE_URL "https://github.com/LittleMushroom-private/imguiwrap.git"
+	LANGUAGES CXX C
+)
 
 # Are we standalone?
-if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 	set(IMGUIWRAP_STANDALONE TRUE)
 endif()
 

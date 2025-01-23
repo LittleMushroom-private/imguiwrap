@@ -1,39 +1,62 @@
-# Dockerfile for building imguiwrap in a Linux environment. See also
-# docker-build.sh
+# Use Alpine as the base image
+FROM alpine:latest
 
-FROM ubuntu:latest AS base-os
+# Install necessary packages
+RUN apk add --no-cache \
+    bash \
+    build-base \
+    git \
+    python3 \
+    py3-pip \
+    libgcc \
+    gdb \
+    clang19-dev \
+    llvm19-dev \
+    cmake \
+    neovim \
+    emacs \
+    nano \
+    doxygen \
+    graphviz \
+    ccache \
+    cppcheck \
+    pipx \
+    ninja \
+    ninja-build \
+    wayland-dev \
+    libxcb-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11 \
+    libxrandr-dev \
+    libxcursor-dev \
+    libxi-dev \
+    glfw-dev
 
-# If you have a local cache or proxy for apt packages; see apt-cacher-ng.
-# e.g: APT_CACHE=http://apt-cache.local:3142/
-ARG APT_CACHE
+RUN    pipx install conan
+# Set environment variables for Conan
+ENV CONAN_SYSREQUIRES_SUDO=0
+ENV CONAN_SYSREQUIRES_MODE=enabled
 
-RUN \
-	if [ -z "${APT_CACHE}"; then echo "Acquire::http::Proxy \"${APT_CACHE}\";" >/etc/apt/apt.conf.d/02proxy; fi; \
-	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections ; \
-	mkdir /src
+# Set compiler defaults based on user arguments
+ARG USE_CLANG
+ENV CC=${USE_CLANG:+"clang"}
+ENV CXX=${USE_CLANG:+"clang++"}
+ENV CC=${CC:-"gcc"}
+ENV CXX=${CXX:-"g++"}
 
-RUN apt update	&& \
-	apt install -qy --upgrade apt-transport-https apt-utils && \
-	apt upgrade -qy && \
-	apt install -qy --upgrade \
-        build-essential \
-        cmake ninja-build cmake-doc  \
-		clang-11 clang-tidy-11 clang-format-11 && \
-	apt autoremove -qy && apt clean auto && rm -rf /var/lib/apt/lists/*
+# Install include-what-you-use
+#ENV IWYU /home/iwyu
+#ENV IWYU_BUILD ${IWYU}/build
+#ENV IWYU_SRC ${IWYU}/include-what-you-use
 
-FROM base-os AS imgui-packages
+#RUN mkdir -p ${IWYU_BUILD} && \
+#    git clone --branch clang_${LLVM_VER} \
+#        https://github.com/include-what-you-use/include-what-you-use.git \
+#        ${IWYU_SRC} && \
+#    cd ${IWYU_BUILD} && \
+#    cmake -S ${IWYU_SRC} -B . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/lib/llvm-${LLVM_VER} && \
+#    cmake --build . -j && \
+#    cmake --install .
 
-RUN apt update && \
-	apt install -qy \
-		libx11-dev \
-		libsdl2-dev \
-		libglfw3-dev && \
-	apt autoremove -qy && apt clean auto && rm -rf /var/lib/apt/lists/*
-
-FROM imgui-packages
-
-# Mount this folder as /src, e.g.
-# docker --rm -it -v ${pwd}:/src kfsone/imguibuild
-VOLUME /src
-
-ENTRYPOINT ["/src/docker-build.sh"]
+# Final cleanup (not much to clean in Alpine)
+CMD ["/bin/bash"]
