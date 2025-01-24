@@ -24,7 +24,7 @@ macro(imguiwrap_setup_options)
   cmake_dependent_option(
     imguiwrap_ENABLE_GLOBAL_HARDENING
     "Attempt to push hardening options to built dependencies"
-    ON
+    OFF
     imguiwrap_ENABLE_HARDENING
     OFF)
 

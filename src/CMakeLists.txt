@@ -73,20 +73,9 @@ target_include_directories(
 #)
 
 
-if (MSVC)
-	string (REGEX REPLACE "/EH[a-z]+-?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	set (IMGW_NO_EXCEPTIONS /EHc-)
-	set (IMGW_ALL_WARNINGS  /W3)
-	set (IMGW_NO_RTTI /GR-)
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-	set (IMGW_NO_EXCEPTIONS -fno-exceptions)
-	set (IMGW_ALL_WARNINGS  -Wall -Werror -Wextra -Wpedantic)
-	set (IMGW_NO_RTTI -fno-rtti)
-else ()
-	message (WARNING "CMAKE_CXX_FLAGS not set for compiler ${CMAKE_CXX_COMPILER_ID}")
-endif ()
 
-target_compile_options(imguiwrap PRIVATE ${IMGW_NO_RTTI} ${IMGW_NO_EXCEPTIONS} ${IMGW_ALL_WARNINGS})
+
+#target_compile_options(imguiwrap PRIVATE ${IMGW_NO_RTTI} ${IMGW_NO_EXCEPTIONS} ${IMGW_ALL_WARNINGS})
 
 if (IMGUIWRAP_STANDALONE)
 	add_subdirectory(example)
