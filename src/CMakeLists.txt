@@ -64,18 +64,17 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-#target_include_directories(
-#	imguiwrap
-#
-#	PRIVATE
-#
-#	${CMAKE_CURRENT_SOURCE_DIR}
-#)
+target_include_directories(
+	imguiwrap
+
+	PRIVATE
+
+	${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 
 
-
-#target_compile_options(imguiwrap PRIVATE ${IMGW_NO_RTTI} ${IMGW_NO_EXCEPTIONS} ${IMGW_ALL_WARNINGS})
+target_compile_options(imguiwrap PRIVATE ${IMGW_NO_RTTI} ${IMGW_NO_EXCEPTIONS} ${IMGW_ALL_WARNINGS})
 
 if (IMGUIWRAP_STANDALONE)
 	add_subdirectory(example)
